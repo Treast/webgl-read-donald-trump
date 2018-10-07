@@ -39,7 +39,7 @@ export default class SceneManager {
     //this.cameraHelper = new THREE.CameraHelper(this.camera)
     this.scene.add(this.camera)
     //this.scene.add(this.cameraHelper)
-    this.controls = new THREE.OrbitControls(this.camera)
+    //this.controls = new THREE.OrbitControls(this.camera)
   }
 
   setCameraPosition(x, y, z) {
@@ -57,7 +57,7 @@ export default class SceneManager {
     if(this.stats) {
       this.stats.begin();
     }
-    this.controls.update()
+    //this.controls.update()
     this.renderer.render(this.scene, this.camera)
     animation();
     if(this.stats) {

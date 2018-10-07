@@ -19,6 +19,8 @@ app.isReady().then(() => {
         vertices.push(new THREE.Vector3(position.array[i] / scale, position.array[i + 1] / scale, position.array[i + 2] / scale))
       }
       curve = new THREE.CatmullRomCurve3(vertices)
+      curve.arcLengthDivisions = 500
+      console.log(curve)
     })
 
   sceneManager.animate(() => {
