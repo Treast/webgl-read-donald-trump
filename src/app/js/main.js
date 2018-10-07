@@ -32,12 +32,12 @@ app.isReady().then(() => {
       let cameraPosition = curve.getPoint(point)
       let cameraTangent = curve.getTangent(point)
 
-      //sceneManager.camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
-      //sceneManager.camera.rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
-      //sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
-      sceneManager.getObject("Trump").position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
-      sceneManager.getObject("Trump").rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
-      sceneManager.getObject("Trump").lookAt(curve.getPoint(pointNext + 1))
+      sceneManager.setCameraPosition(cameraPosition.x / 100, cameraPosition.y / 100, cameraPosition.z / 100)
+      sceneManager.camera.rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
+      sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
+      //sceneManager.getObject("Trump").position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
+      //sceneManager.getObject("Trump").rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
+      //sceneManager.getObject("Trump").lookAt(curve.getPoint(pointNext + 1))
     }
   })
 });
