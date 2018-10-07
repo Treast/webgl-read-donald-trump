@@ -1,4 +1,5 @@
 import THREE from './Bundle'
+import * as Stats from 'stats.js'
 
 export default class SceneManager {
   constructor() {
@@ -20,6 +21,12 @@ export default class SceneManager {
     })
   }
 
+  enableStats() {
+    this.stats = new Stats()
+    this.stats.showPanel(0);
+    document.body.appendChild(this.stats.dom)
+  }
+
   createScene() {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0xffffff)
@@ -29,9 +36,9 @@ export default class SceneManager {
     this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.camera.position.set(-8.1, 3.1, 1.9)
     this.camera.lookAt(0.1, 1, -0.8)
-    this.cameraHelper = new THREE.CameraHelper(this.camera)
+    //this.cameraHelper = new THREE.CameraHelper(this.camera)
     this.scene.add(this.camera)
-    this.scene.add(this.cameraHelper)
+    //this.scene.add(this.cameraHelper)
     //this.controls = new THREE.OrbitControls(this.camera)
   }
 
@@ -43,9 +50,15 @@ export default class SceneManager {
 
   animate(animation = () => {}) {
     requestAnimationFrame(() => {this.animate(animation)})
+    if(this.stats) {
+      this.stats.begin();
+    }
     //this.controls.update()
     this.renderer.render(this.scene, this.camera)
     animation();
+    if(this.stats) {
+      this.stats.end();
+    }
   }
 
   addObjectToScene(object) {
