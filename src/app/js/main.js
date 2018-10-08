@@ -7,6 +7,14 @@ let curve = null;
 let curveLength = 0
 let scrollPosition = 0;
 
+let lookAts = [
+  {
+    begin: 45,
+    end: 55,
+    lookAt: "Trump"
+  }
+]
+
 app.isReady().then(() => {
   let sceneManager = new SceneManager()
   sceneManager.enableStats()
@@ -38,18 +46,26 @@ app.isReady().then(() => {
 
   sceneManager.animate(() => {
     if(curve && true) {
-      let point = Math.floor(curveLength * scrollPosition);
+      let point = Math.floor(curveLength * scrollPosition) % curveLength;
       let pointNext = (point + 1) % curveLength;
       let cameraPosition = curve.getPoint(point)
       let cameraTangent = curve.getTangent(point)
 
       let scale = 100
+      let isLookingToObject = false
       sceneManager.setCameraPosition(cameraPosition.x / scale, cameraPosition.y / scale, cameraPosition.z / scale)
-      sceneManager.camera.rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
-      sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
-      //sceneManager.getObject("Trump").position.set(cameraPosition.x / scale, cameraPosition.y / scale, cameraPosition.z / scale)
-      //sceneManager.getObject("Trump").rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
-      //sceneManager.getObject("Trump").lookAt(curve.getPoint(pointNext + 1))
+
+      for(let lookAt of lookAts) {
+        if(point >= lookAt.begin && point <= lookAt.end) {
+          isLookingToObject = true
+          let object = sceneManager.getObject(lookAt.lookAt)
+          sceneManager.camera.lookAt(new THREE.Vector3(object.position.x / scale, object.position.y / scale, object.position.z / scale))
+        }
+      }
+
+      if(!isLookingToObject) {
+        sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
+      }
     }
   })
 });
