@@ -10,7 +10,7 @@ let scrollPosition = 0;
 let lookAts = [
   {
     begin: 45,
-    end: 55,
+    end: 60,
     lookAt: "Trump"
   }
 ]
@@ -35,18 +35,21 @@ app.isReady().then(() => {
 
       let material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
 
-// Create the final object to add to the scene
       let curveObject = new THREE.Line( geometry, material );
       sceneManager.addObjectToScene(curveObject)
     })
 
   window.addEventListener('mousewheel', (e) => {
     scrollPosition += e.deltaY / 5000;
+
+    if(scrollPosition < 0) {
+      scrollPosition = 0
+    }
   })
 
   sceneManager.animate(() => {
     if(curve && true) {
-      let point = Math.floor(curveLength * scrollPosition) % curveLength;
+      let point = Math.floor(curveLength * scrollPosition + curveLength) % curveLength;
       let pointNext = (point + 1) % curveLength;
       let cameraPosition = curve.getPoint(point)
       let cameraTangent = curve.getTangent(point)
