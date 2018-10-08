@@ -4,6 +4,7 @@ import ObjectLoader from './utils/ObjectLoader'
 
 let app = new App();
 let curve = null;
+let scrollPosition = 0;
 
 app.isReady().then(() => {
   let sceneManager = new SceneManager()
@@ -20,22 +21,21 @@ app.isReady().then(() => {
       }
       curve = new THREE.CatmullRomCurve3(vertices)
       curve.arcLengthDivisions = 500
-      console.log(curve)
     })
 
-  sceneManager.animate(() => {
-    let time = Date.now()
-    let loopTime = 20 * 1000
-    let t = (time % loopTime) / loopTime
+  window.addEventListener('mousewheel', (e) => {
+    scrollPosition += e.deltaY / 1000;
+  })
 
+  sceneManager.animate(() => {
     if(curve && true) {
-      let point = Math.floor(curve.getLength() * t);
+      let point = Math.floor(curve.getLength() * scrollPosition);
       let pointNext = (point + 1) % curve.getLength();
       let cameraPosition = curve.getPoint(point)
       let cameraTangent = curve.getTangent(point)
 
       sceneManager.setCameraPosition(cameraPosition.x / 100, cameraPosition.y / 100, cameraPosition.z / 100)
-      sceneManager.camera.rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
+      sceneManager.camera.rotation.set(cameraTangent.x, 0, 0)
       sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
       //sceneManager.getObject("Trump").position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
       //sceneManager.getObject("Trump").rotation.set(cameraTangent.x, cameraTangent.y, cameraTangent.z)
