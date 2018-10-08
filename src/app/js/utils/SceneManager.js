@@ -43,7 +43,7 @@ export default class SceneManager {
   }
 
   setCameraPosition(x, y, z) {
-    this.camera.position.set(x, y, z)
+    this.camera.position.lerp(new THREE.Vector3(x, y, z), 0.05)
   }
 
   createRenderer() {
