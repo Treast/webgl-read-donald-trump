@@ -4,6 +4,7 @@ import ObjectLoader from './utils/ObjectLoader'
 
 let app = new App();
 let curve = null;
+let curvePoints = []
 let curveLength = 0
 let scrollPosition = 0;
 
@@ -31,7 +32,8 @@ app.isReady().then(() => {
         vertices.push(new THREE.Vector3(position.array[i] / scale, position.array[i + 1] / scale, position.array[i + 2] / scale))
       }
       curve = new THREE.CatmullRomCurve3(vertices)
-      let geometry = new THREE.BufferGeometry().setFromPoints( curve.getPoints(200) );
+      curvePoints = curve.getPoints(500)
+      let geometry = new THREE.BufferGeometry().setFromPoints( curve.getPoints(500) );
 
       let material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
 
@@ -49,10 +51,10 @@ app.isReady().then(() => {
 
   sceneManager.animate(() => {
     if(curve && true) {
-      let point = Math.floor(curveLength * scrollPosition + curveLength) % curveLength;
-      let pointNext = (point + 1) % curveLength;
-      let cameraPosition = curve.getPoint(point)
-      let cameraTangent = curve.getTangent(point)
+      let point = Math.floor(curvePoints.length * scrollPosition + curvePoints.length) % curvePoints.length;
+      let pointNext = (point + 1) % curvePoints.length;
+      let cameraPosition = curvePoints[point]
+      //let cameraTangent = curve.getTangent(point)
 
       let scale = 100
       let isLookingToObject = false
@@ -67,7 +69,7 @@ app.isReady().then(() => {
       }
 
       if(!isLookingToObject) {
-        sceneManager.camera.lookAt(curve.getPoint(pointNext + 1))
+        sceneManager.camera.lookAt(curvePoints[pointNext + 1])
       }
     }
   })
