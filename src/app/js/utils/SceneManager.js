@@ -1,4 +1,5 @@
 import THREE from './Bundle'
+import CameraPath from './CameraPath'
 import * as Stats from 'stats.js'
 
 export default class SceneManager {
@@ -36,10 +37,17 @@ export default class SceneManager {
     this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.camera.position.set(-8.1, 3.1, 1.9)
     this.camera.lookAt(0.1, 1, -0.8)
-    //this.cameraHelper = new THREE.CameraHelper(this.camera)
+    this.cameraPath = null
     this.scene.add(this.camera)
-    //this.scene.add(this.cameraHelper)
     //this.controls = new THREE.OrbitControls(this.camera)
+  }
+
+  createCameraPath(object) {
+    this.cameraPath = new CameraPath(object)
+  }
+
+  addLookAtObject(begin, end, object) {
+    this.cameraPath.addLookAtObject(begin, end, object)
   }
 
   setCameraPosition(x, y, z) {
@@ -57,6 +65,14 @@ export default class SceneManager {
     if(this.stats) {
       this.stats.begin();
     }
+
+    if(this.cameraPath && this.cameraPath.hasLoaded()) {
+      let cameraPosition = this.cameraPath.getCameraPosition()
+      let cameraLookAt = this.cameraPath.getCameraLookAt()
+      this.camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
+      this.camera.lookAt(cameraLookAt)
+    }
+
     //this.controls.update()
     this.renderer.render(this.scene, this.camera)
     animation();
