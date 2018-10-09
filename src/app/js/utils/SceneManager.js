@@ -1,5 +1,6 @@
 import THREE from './Bundle'
 import CameraPath from './CameraPath'
+import EventBus from './EventBus'
 import * as Stats from 'stats.js'
 
 export default class SceneManager {

@@ -1,4 +1,5 @@
 import THREE from './Bundle'
+import EventBus from './EventBus'
 
 export default class CameraPath {
   constructor(object) {
@@ -6,7 +7,9 @@ export default class CameraPath {
     this.scrollPosition = 0
     this.loaded = false
     this.buildFromLine(object)
-    this.onMouseWheel()
+    EventBus.listen('loading:disappear', () => {
+      this.onMouseWheel()
+    })
   }
 
   buildFromLine(object) {

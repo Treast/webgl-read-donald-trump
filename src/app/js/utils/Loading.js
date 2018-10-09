@@ -12,6 +12,19 @@ export default class Loading {
       './assets/Trump.dae',
       './assets/Trump10.dae'
     ];
+    this.onClick()
+  }
+
+  onClick() {
+    document.querySelector('#begin-experiment').addEventListener('click', (e) => {
+      e.preventDefault()
+      TweenMax.to(document.querySelector('#context'), 0.4, {
+        alpha: 0,
+        onComplete: () => {
+          EventBus.dispatch('loading:disappear')
+        }
+      })
+    })
   }
 
   init() {
@@ -42,7 +55,15 @@ export default class Loading {
       alpha: 0,
       onComplete: () => {
         this.element.style.display = "none";
+        this.animateContext();
       }
+    })
+  }
+
+  animateContext() {
+    TweenMax.to(document.querySelector('#context .texts'), 2, {
+      alpha: 1,
+      marginTop: 5
     })
   }
 

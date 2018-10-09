@@ -30,4 +30,44 @@ $loaderMaxWidth: 600px;
   color: white;
   font-size: 100px;
   font-family: 'Coda';
+  z-index: 3;
+}
+
+#context {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: rgba(darken(#2f3542, 6), 0.9);
+
+  .texts {
+    font-family: 'Lato', sans-serif;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    margin-top: 50px;
+    opacity: 0;
+
+    p {
+      color: white;
+      padding: 5px 0;
+    }
+
+    button {
+      cursor: pointer;
+      background: none;
+      box-shadow: none;
+      border-radius: 10px;
+      border: 1px solid white;
+      -webkit-appearance: none;
+      font-size: 16px;
+      padding: 5px 15px;
+      color: white;
+      margin-top: 20px;
+    }
+  }
 }
