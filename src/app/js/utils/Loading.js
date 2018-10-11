@@ -5,7 +5,7 @@ import {TweenMax} from 'gsap';
 export default class Loading {
   constructor(element) {
     this.element = element;
-    this.elementMaxWidth = 600;
+    this.elementMaxWidth = 284;
     this.currentLoading = 0;
     this.cacheObjects = {};
     this.objectsToLoad = [

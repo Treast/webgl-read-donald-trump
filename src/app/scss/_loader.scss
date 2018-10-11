@@ -1,5 +1,5 @@
-$image: url('https://i.imgur.com/yB2TNUh.png');
-$loaderMaxWidth: 600px;
+$image: url('../static/AmericanFlag.png');
+$loaderMaxWidth: 284px;
 
 #loader-page {
   position: absolute;
@@ -7,7 +7,8 @@ $loaderMaxWidth: 600px;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: darken(#2f3542, 6);
+  background-color: white;
+  z-index: 4;
 }
 
 #loader {
@@ -15,21 +16,21 @@ $loaderMaxWidth: 600px;
   top: 50%;
   left: 50%;
   transform: translate(-1 * $loaderMaxWidth / 2, -50%);
-  height: 600px;
+  height: 142px;
   width: 0;
   max-width: $loaderMaxWidth;
   background-image: $image;
-  background-size: 600px $loaderMaxWidth;
+  background-size: $loaderMaxWidth 142px;
 }
 
 #loader-percent {
   position: absolute;
-  top: 50%;
+  top: calc(50% + 85px);
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
-  font-size: 100px;
-  font-family: 'Coda';
+  color: black;
+  font-size: 20px;
+  font-family: 'Oswald', sans-serif;
   z-index: 3;
 }
 
@@ -40,7 +41,14 @@ $loaderMaxWidth: 600px;
   right: 0;
   bottom: 0;
   z-index: 2;
-  background-color: rgba(darken(#2f3542, 6), 0.9);
+  background-color: white;
+
+  .dot {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 
   .texts {
     font-family: 'Lato', sans-serif;
@@ -51,23 +59,65 @@ $loaderMaxWidth: 600px;
     transform: translate(-50%, -50%);
     margin-top: 50px;
     opacity: 0;
+    width: 400px;
+
+    &::before {
+      content: '';
+      display: block;
+      height: 10000px;
+      width: 1px;
+      position: absolute;
+      top: -10050px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: black;
+    }
 
     p {
-      color: white;
+      font-family: 'Barlow', sans-serif;
+      color: black;
       padding: 5px 0;
     }
 
     button {
+      position: relative;
       cursor: pointer;
       background: none;
       box-shadow: none;
-      border-radius: 10px;
-      border: 1px solid white;
+      border: 1px solid black;
       -webkit-appearance: none;
-      font-size: 16px;
-      padding: 5px 15px;
-      color: white;
-      margin-top: 20px;
+      padding: 7px 15px;
+      color: black;
+      text-transform: uppercase;
+      margin-top: 110px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+
+      &:active, &:focus {
+        border: 1px solid black;
+        background: none;
+        box-shadow: none;
+      }
+
+      &:hover {
+        background-color: black;
+        color: white;
+      }
+
+      &::before {
+        content: '';
+        display: block;
+        width: 1px;
+        height: 55px;
+        position: absolute;
+        top: -85px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: black;
+      }
     }
   }
 }
