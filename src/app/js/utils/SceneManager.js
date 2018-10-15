@@ -3,7 +3,8 @@ import CameraPath from './CameraPath'
 import EventBus from './EventBus'
 import * as Stats from 'stats.js'
 
-export default class SceneManager {
+class SceneManager {
+
   constructor() {
     this.initializeScene()
   }
@@ -90,3 +91,5 @@ export default class SceneManager {
     return this.scene.getObjectByName(name, true)
   }
 }
+
+export default new SceneManager();

@@ -1,15 +1,24 @@
 import THREE from './Bundle'
 import EventBus from './EventBus'
+import PathEvent from "./PathEvent";
+import Timeline from "./Timeline";
 
 export default class CameraPath {
   constructor(object) {
-    this.lookAtObjects = []
     this.scrollPosition = 0
     this.loaded = false
     this.buildFromLine(object)
+    this.buildTimeline()
     EventBus.listen('loading:disappear', () => {
       this.onMouseWheel()
     })
+  }
+
+  buildTimeline() {
+    let pathEvents = [
+      new PathEvent(40, 65, "Trump")
+    ];
+    this.timeline = new Timeline(pathEvents);
   }
 
   buildFromLine(object) {
@@ -21,6 +30,7 @@ export default class CameraPath {
     }
     this.curve = new THREE.CatmullRomCurve3(vertices)
     this.curvePoints = this.curve.getPoints(500)
+    console.log('CurvePoints', this.curvePoints.length)
     this.loaded = true
   }
 
@@ -38,14 +48,6 @@ export default class CameraPath {
     return this.loaded
   }
 
-  addLookAtObject(begin, end, object) {
-    this.lookAtObjects.push({
-      begin: begin,
-      end: end,
-      object: object
-    })
-  }
-
   getCameraPosition() {
     let scale = 100
     let point = Math.floor(this.curvePoints.length * this.scrollPosition + this.curvePoints.length) % this.curvePoints.length;
@@ -59,14 +61,12 @@ export default class CameraPath {
   }
 
   getCameraLookAt() {
-    let scale = 100
     let point = Math.floor(this.curvePoints.length * this.scrollPosition + this.curvePoints.length) % this.curvePoints.length;
 
-    for(let lookAtObject of this.lookAtObjects) {
-      if(point >= lookAtObject.begin && point <= lookAtObject.end) {
-        return new THREE.Vector3(lookAtObject.object.position.x / scale, lookAtObject.object.position.y / scale, lookAtObject.object.position.z / scale)
-      }
+    if(this.timeline.hasPathEventIn(point)) {
+      return this.timeline.getPathEventIn(point);
     }
+
     let pointNext = (point + 1) % this.curvePoints.length;
     return this.curvePoints[pointNext + 1]
   }
