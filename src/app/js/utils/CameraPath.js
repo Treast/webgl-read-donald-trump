@@ -17,12 +17,12 @@ export default class CameraPath {
 
   buildTimeline() {
     let pathEvents = [
-      new PathEvent(40, 65, "Trump")
+      new PathEvent(400, 650, "Trump")
     ];
     let timeEvents = [
-      new TimeEvent(0, 30, "Title 1"),
-      new TimeEvent(31, 60, "Title 2"),
-      new TimeEvent(61, 90, "Title 3"),
+      new TimeEvent(0, 300, "Title 1"),
+      new TimeEvent(301, 600, "Title 2"),
+      new TimeEvent(601, 900, "Title 3"),
     ];
     this.timeline = new Timeline(pathEvents, timeEvents);
     this.timeline.buildTimelineHTML()
@@ -36,7 +36,12 @@ export default class CameraPath {
       vertices.push(new THREE.Vector3(position.array[i] / scale, position.array[i + 1] / scale, position.array[i + 2] / scale))
     }
     this.curve = new THREE.CatmullRomCurve3(vertices)
-    this.curvePoints = this.curve.getPoints(500)
+    this.curvePoints = []
+    for (let i = 0; i < this.curve.getLength(); i++){
+      let p = this.curve.getUtoTmapping(0, i);
+      let p1 = this.curve.getPoint(p);
+      this.curvePoints.push(p1);
+    }
     console.log('CurvePoints', this.curvePoints.length)
     this.loaded = true
   }
