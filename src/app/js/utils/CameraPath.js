@@ -2,6 +2,7 @@ import THREE from './Bundle'
 import EventBus from './EventBus'
 import PathEvent from "./PathEvent";
 import Timeline from "./Timeline";
+import TimeEvent from "./TimeEvent";
 
 export default class CameraPath {
   constructor(object) {
@@ -18,7 +19,13 @@ export default class CameraPath {
     let pathEvents = [
       new PathEvent(40, 65, "Trump")
     ];
-    this.timeline = new Timeline(pathEvents);
+    let timeEvents = [
+      new TimeEvent(0, 30, "Title 1"),
+      new TimeEvent(31, 60, "Title 2"),
+      new TimeEvent(61, 90, "Title 3"),
+    ];
+    this.timeline = new Timeline(pathEvents, timeEvents);
+    this.timeline.buildTimelineHTML()
   }
 
   buildFromLine(object) {
@@ -52,6 +59,8 @@ export default class CameraPath {
     let scale = 100
     let point = Math.floor(this.curvePoints.length * this.scrollPosition + this.curvePoints.length) % this.curvePoints.length;
     let cameraPosition = this.curvePoints[point]
+
+    this.timeline.setPoint(point)
 
     return {
       x: cameraPosition.x / scale,

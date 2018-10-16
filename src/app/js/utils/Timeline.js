@@ -1,6 +1,7 @@
 export default class Timeline {
-  constructor(pathEvents) {
+  constructor(pathEvents, timeEvents) {
     this.pathEvents = pathEvents
+    this.timeEvents = timeEvents
   }
 
   hasPathEventIn(point) {
@@ -19,5 +20,21 @@ export default class Timeline {
       }
     }
     return null;
+  }
+
+  setPoint(point) {
+    for(let timeEvent of this.timeEvents) {
+      timeEvent.setSelected(timeEvent.isSelected(point))
+    }
+  }
+
+  buildTimelineHTML() {
+    let container = document.querySelector('#timeline ul')
+    for(let timeEvent of this.timeEvents) {
+      let li = document.createElement('li')
+      li.innerText = timeEvent.title
+      container.appendChild(li)
+      timeEvent.setElement(li)
+    }
   }
 }
