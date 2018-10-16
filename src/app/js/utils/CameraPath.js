@@ -42,7 +42,6 @@ export default class CameraPath {
       let p1 = this.curve.getPoint(p);
       this.curvePoints.push(p1);
     }
-    console.log('CurvePoints', this.curvePoints.length)
     this.loaded = true
   }
 

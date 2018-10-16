@@ -2,6 +2,7 @@ import THREE from './Bundle'
 import CameraPath from './CameraPath'
 import EventBus from './EventBus'
 import * as Stats from 'stats.js'
+import * as TWEEN from '@tweenjs/tween.js'
 
 class SceneManager {
 
@@ -48,10 +49,6 @@ class SceneManager {
     this.cameraPath = new CameraPath(object)
   }
 
-  addLookAtObject(begin, end, object) {
-    this.cameraPath.addLookAtObject(begin, end, object)
-  }
-
   setCameraPosition(x, y, z) {
     this.camera.position.lerp(new THREE.Vector3(x, y, z), 0.05)
   }
@@ -67,11 +64,16 @@ class SceneManager {
     if(this.stats) {
       this.stats.begin();
     }
+    TWEEN.update();
 
     if(this.cameraPath && this.cameraPath.hasLoaded()) {
       let cameraPosition = this.cameraPath.getCameraPosition()
       let cameraLookAt = this.cameraPath.getCameraLookAt()
-      this.camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z)
+      TWEEN.removeAll();
+      let tween = new TWEEN.Tween(this.camera.position)
+        .to(cameraPosition, 200)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
       this.camera.lookAt(cameraLookAt)
     }
 
