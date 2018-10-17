@@ -15,8 +15,7 @@ export default class Loading {
     this.currentLoading = 0;
     this.cacheObjects = {};
     this.objectsToLoad = [
-      './assets/Trump.dae',
-      './assets/Trump10.dae',
+      './assets/TheRealDonaldTrump5.dae',
     ];
     this.onClick();
   }

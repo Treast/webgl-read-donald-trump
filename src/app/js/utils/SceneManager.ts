@@ -2,6 +2,22 @@ import THREE from './Bundle';
 import CameraPath from './CameraPath';
 import * as Stats from 'stats.js';
 import * as TWEEN from '@tweenjs/tween.js';
+import { OrbitControls } from 'three';
+import Flag from './Flag';
+import EventBus from './EventBus';
+import * as dat from 'dat.gui';
+
+interface ControlsPosition {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface FlagInformations {
+  name: string;
+  parent: string;
+  windForce: number;
+}
 
 class SceneManager {
 
@@ -10,8 +26,17 @@ class SceneManager {
   private cameraPath: CameraPath;
   private renderer: THREE.WebGLRenderer;
   private stats: Stats;
+  private controls: OrbitControls;
+  private flags: Flag[] = [];
+  private params: ControlsPosition;
 
   constructor() {
+    this.params = {
+      x: 0,
+      y: 0,
+      z: 0,
+    };
+    const gui = new dat.GUI();
     this.initializeScene();
   }
 
@@ -20,6 +45,46 @@ class SceneManager {
     this.createCamera();
     this.createRenderer();
     this.onResize();
+    this.onLoadFinished();
+  }
+
+  onLoadFinished() {
+    EventBus.listen('scene:loaded', () => {
+      this.createFlags();
+    });
+  }
+
+  createFlags() {
+    const flags: FlagInformations[] = [
+      {
+        name: 'Drapeau_1',
+        parent: 'drapeau_1',
+        windForce: 2,
+      },
+      {
+        name: 'Drapeau_2',
+        parent: 'drapeau_2',
+        windForce: 1.8,
+      },
+      {
+        name: 'Drapeau_3',
+        parent: 'drapeau_3',
+        windForce: 2.2,
+      },
+    ];
+
+    for (const flag of flags) {
+      const object = this.getObject(flag.name);
+      const flagMesh = new Flag(new THREE.Vector3(object.position.x - Flag.OFFSETX,
+                                                  object.position.y - Flag.OFFSETY,
+                                                  object.position.z - Flag.OFFSETZ),
+                                object.rotation.toVector3(),
+                                new THREE.Vector3(0.6, 0.6, 0.6),
+                                flag.windForce);
+      this.scene.getObjectByName(flag.parent).add(flagMesh.mesh);
+      object.visible = false;
+      this.flags.push(flagMesh);
+    }
   }
 
   onResize() {
@@ -39,6 +104,7 @@ class SceneManager {
   createScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xffffff);
+    this.scene.add(new THREE.AmbientLight(0x808080));
   }
 
   createCamera() {
@@ -47,11 +113,11 @@ class SceneManager {
     this.camera.lookAt(0.1, 1, -0.8);
     this.cameraPath = null;
     this.scene.add(this.camera);
-    // this.controls = new THREE.OrbitControls(this.camera)
+    this.controls = new THREE.OrbitControls(this.camera);
   }
 
   createCameraPath(object: THREE.Line) {
-    this.cameraPath = new CameraPath(object);
+    // this.cameraPath = new CameraPath(object);
   }
 
   createRenderer() {
@@ -66,6 +132,11 @@ class SceneManager {
       this.stats.begin();
     }
     TWEEN.update();
+    const time = Date.now();
+    for (const flag of this.flags) {
+      flag.simulate(time);
+      flag.update();
+    }
 
     if (this.cameraPath && this.cameraPath.hasLoaded()) {
       const cameraPosition = this.cameraPath.getCameraPosition();
@@ -78,7 +149,7 @@ class SceneManager {
       this.camera.lookAt(cameraLookAt);
     }
 
-    // this.controls.update()
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
     animation();
     if (this.stats) {

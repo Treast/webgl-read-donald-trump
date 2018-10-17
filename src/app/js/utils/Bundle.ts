@@ -9,4 +9,7 @@ require('three/examples/js/loaders/OBJLoader');
 require('three/examples/js/loaders/ColladaLoader');
 require('three/examples/js/loaders/GLTFLoader');
 
+// Extras
+require('three/examples/js/Cloth');
+
 export default THREE;
