@@ -12,12 +12,18 @@ interface Clone {
   initialPosition: ClonePosition;
 }
 
+interface CloneColor {
+  r: number;
+  g: number;
+  b: number;
+}
+
 export class Glitch {
 
   static COLORS = [
-    [255, 0, 0],
-    [0, 255, 0],
-    [0, 0, 255],
+    { r: 255, g: 0, b: 0 } as CloneColor,
+    { r: 0, g: 255, b: 0 } as CloneColor,
+    { r: 0, g: 0, b: 255 } as CloneColor,
   ];
   static NUMBER_OF_CLONES = 3;
   static MAX_DIST_CLONES_TO_CENTER = 15;
@@ -47,20 +53,20 @@ export class Glitch {
     return objs;
   }
 
-  setObject(object: Mesh, color: number[]) {
+  setObject(object: Mesh, color: CloneColor) {
     const objectsChildrens = this.getObjectWithMaterials(object);
     objectsChildrens.forEach((object) => {
       if (Array.isArray(object.material)) {
         object.material = object.material.map((material: MeshPhongMaterial) => {
           const newMaterial = material.clone();
-          newMaterial.color.setRGB(color[0], color[1], color[2]);
+          newMaterial.color.setRGB(color.r, color.g, color.b);
           newMaterial.transparent = true;
           newMaterial.opacity = 0.7;
           return newMaterial;
         });
       } else {
         const newMaterial = object.material.clone() as MeshPhongMaterial;
-        newMaterial.color.setRGB(color[0], color[1], color[2]);
+        newMaterial.color.setRGB(color.r, color.g, color.b);
         newMaterial.transparent = true;
         newMaterial.opacity = 0.7;
         object.material = newMaterial;
