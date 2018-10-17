@@ -91,8 +91,7 @@ class SceneManager {
   }
 
   getObject(name: string) {
-    // @ts-ignore
-    return this.scene.getObjectByName(name, true);
+    return this.scene.getObjectByName(name);
   }
 }
 
