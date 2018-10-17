@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const config = {
-  entry: path.resolve(__dirname, 'src', 'app', 'js', 'main.js'),
+  entry: path.resolve(__dirname, 'src', 'app', 'js', 'main.ts'),
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: outputFileName,
@@ -26,6 +26,28 @@ const config = {
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        enforce: 'pre',
+        use: [
+          {
+            loader: 'tslint-loader',
+            options: {
+              "configFile": "tslint.json",
+              "tsConfigFile": "tsconfig.json",
+              "typeCheck": true
+            }
+          }
+        ],
+        exclude: /(node_modules|bower_components)/,
+      },
+      {
+        test: /\.tsx?$/,
+        use: [
+          'ts-loader'
+        ],
+        exclude: /(node_modules|bower_components)/
+      },
       {
         test: /(\.jsx|\.js)$/,
         loader: 'babel-loader',
@@ -56,6 +78,9 @@ const config = {
         },
       },
     ],
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ]
   },
   optimization,
   mode,
