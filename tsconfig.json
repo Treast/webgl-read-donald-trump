@@ -6,7 +6,11 @@
     "module": "es6",
     "target": "es2015",
     "jsx": "react",
-    "allowJs": true
+    "allowJs": true,
+    "typeRoots" : [
+      "node_modules/@types/",
+      "./src/app/js/typings.d.ts"
+    ]
   },
   "include": [
     "./src/app/js/**/*.ts",

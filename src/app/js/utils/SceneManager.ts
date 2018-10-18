@@ -6,18 +6,9 @@ import { OrbitControls } from 'three';
 import Flag from './Flag';
 import EventBus from './EventBus';
 import * as dat from 'dat.gui';
-
-interface ControlsPosition {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface FlagInformations {
-  name: string;
-  parent: string;
-  windForce: number;
-}
+import Fact from './Fact';
+import MouseHandler from './MouseHandler';
+import { ControlsPosition, FlagInformations } from '../typings';
 
 class SceneManager {
 
@@ -25,8 +16,9 @@ class SceneManager {
   private camera: THREE.PerspectiveCamera;
   private cameraPath: CameraPath;
   private renderer: THREE.WebGLRenderer;
+  private mouseHandler: MouseHandler;
   private stats: Stats;
-  private controls: OrbitControls;
+  private controls: OrbitControls = null;
   private flags: Flag[] = [];
   private params: ControlsPosition;
 
@@ -44,14 +36,37 @@ class SceneManager {
     this.createScene();
     this.createCamera();
     this.createRenderer();
+    this.mouseHandler = new MouseHandler(this.camera);
     this.onResize();
     this.onLoadFinished();
   }
 
+  enableOrbitControls() {
+    this.controls = new THREE.OrbitControls(this.camera);
+  }
+
   onLoadFinished() {
     EventBus.listen('scene:loaded', () => {
+      this.createFacts();
       this.createFlags();
     });
+  }
+
+  createFacts() {
+    const fact1 = this.getObject('Fait_1');
+    const button1 = fact1.getObjectByName('Bouton_Plus');
+    fact1.getObjectByName('Infos').visible = false;
+    fact1.getObjectByName('Bouton_Plus').visible = false;
+    console.log(fact1);
+    const fact = new Fact('1 janvier 1970', 'Title', 'Content', '', button1.position, button1.quaternion);
+    fact1.add(fact.getSprite());
+    const fact2 = this.getObject('Fait_2');
+    const button2 = fact2.getObjectByName('Bouton_Plus');
+    fact2.getObjectByName('Infos').visible = false;
+    fact2.getObjectByName('Bouton_Plus').visible = false;
+    console.log(fact2);
+    const factS2 = new Fact('1 janvier 1970', 'Title', 'Content', '', button2.position, button2.quaternion);
+    fact2.add(factS2.getSprite());
   }
 
   createFlags() {
@@ -87,6 +102,10 @@ class SceneManager {
     }
   }
 
+  getScene() {
+    return this.scene;
+  }
+
   onResize() {
     window.addEventListener('resize', () => {
       this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -113,11 +132,12 @@ class SceneManager {
     this.camera.lookAt(0.1, 1, -0.8);
     this.cameraPath = null;
     this.scene.add(this.camera);
-    // this.controls = new THREE.OrbitControls(this.camera);
   }
 
   createCameraPath(object: THREE.Line) {
-    this.cameraPath = new CameraPath(object);
+    if (!this.controls) {
+      this.cameraPath = new CameraPath(object);
+    }
   }
 
   createRenderer() {
@@ -132,6 +152,9 @@ class SceneManager {
       this.stats.begin();
     }
     TWEEN.update();
+
+    this.mouseHandler.performRaycast();
+
     const time = Date.now();
     for (const flag of this.flags) {
       flag.simulate(time);
@@ -149,7 +172,10 @@ class SceneManager {
       this.camera.lookAt(cameraLookAt);
     }
 
-    // this.controls.update();
+    if (this.controls) {
+      this.controls.update();
+    }
+
     this.renderer.render(this.scene, this.camera);
     animation();
     if (this.stats) {

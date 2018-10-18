@@ -1,7 +1,7 @@
 export default {
   element: document.createElement('div'),
 
-  listen(event: string, method: () => void, scope?: any) {
+  listen(event: string, method: (e?: CustomEvent) => void, scope?: any) {
     this.element.addEventListener(event, method.bind(scope));
   },
 
