@@ -113,11 +113,11 @@ class SceneManager {
     this.camera.lookAt(0.1, 1, -0.8);
     this.cameraPath = null;
     this.scene.add(this.camera);
-    this.controls = new THREE.OrbitControls(this.camera);
+    // this.controls = new THREE.OrbitControls(this.camera);
   }
 
   createCameraPath(object: THREE.Line) {
-    // this.cameraPath = new CameraPath(object);
+    this.cameraPath = new CameraPath(object);
   }
 
   createRenderer() {
@@ -149,7 +149,7 @@ class SceneManager {
       this.camera.lookAt(cameraLookAt);
     }
 
-    this.controls.update();
+    // this.controls.update();
     this.renderer.render(this.scene, this.camera);
     animation();
     if (this.stats) {

@@ -25,7 +25,6 @@ app.isReady().then(() => {
     const scene = loading.get('./assets/TheRealDonaldTrump5.dae');
     SceneManager.addObjectToScene(scene.scene);
     // SceneManager.getObject('Lumières_scène_1').visible = false;
-    console.log(scene.scene);
 
     const spline = SceneManager.getObject('Spline_scene_1');
     SceneManager.createCameraPath(spline as THREE.Line);
