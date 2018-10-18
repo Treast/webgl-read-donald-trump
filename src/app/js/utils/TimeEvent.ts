@@ -2,7 +2,7 @@ import TimelineEvent from './TimelineEvent';
 
 export default class TimeEvent extends TimelineEvent {
   private element: HTMLElement;
-  private title: string;
+  private readonly title: string;
   private isVisited: boolean;
 
   constructor(begin: number, end: number, title: string) {

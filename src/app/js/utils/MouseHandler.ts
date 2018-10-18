@@ -1,11 +1,7 @@
-import { Camera, Object3D, Raycaster, Scene } from 'three';
+import { Camera, Object3D, Raycaster } from 'three';
 import SceneManager from './SceneManager';
 import EventBus from './EventBus';
-
-interface MousePosition {
-  x: number;
-  y: number;
-}
+import { MousePosition } from '../typings';
 
 export default class MouseHandler {
   private lastObject: Object3D = null;
@@ -37,8 +33,8 @@ export default class MouseHandler {
   onMouseClick() {
     document.addEventListener('click', (e: MouseEvent) => {
       const object = this.getIntersects();
-      if (object) {
-        object.parent.getObjectByName('Infos').visible = true;
+      if (object && object.userData.isInteractive) {
+        EventBus.dispatch('raycast:click', { object });
       }
     });
   }

@@ -1,8 +1,8 @@
 import THREE from './Bundle';
 import EventBus from './EventBus';
-import PathEvent from './PathEvent';
 import Timeline from './Timeline';
-import TimeEvent from './TimeEvent';
+import timeEventsJSON from '../json/timeEvents';
+import pathEventsJSON from '../json/pathEvents';
 
 export default class CameraPath {
   private scrollPosition: number = 0;
@@ -20,14 +20,8 @@ export default class CameraPath {
   }
 
   buildTimeline() {
-    const pathEvents = [
-      new PathEvent(400, 650, 'Trump'),
-    ];
-    const timeEvents = [
-      new TimeEvent(0, 300, 'Title 1'),
-      new TimeEvent(301, 600, 'Title 2'),
-      new TimeEvent(601, 900, 'Title 3'),
-    ];
+    const pathEvents = pathEventsJSON;
+    const timeEvents = timeEventsJSON;
     this.timeline = new Timeline(pathEvents, timeEvents);
     this.timeline.buildTimelineHTML();
   }

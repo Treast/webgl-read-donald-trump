@@ -2,13 +2,15 @@ import THREE from './Bundle';
 import CameraPath from './CameraPath';
 import * as Stats from 'stats.js';
 import * as TWEEN from '@tweenjs/tween.js';
-import { OrbitControls } from 'three';
+import { OrbitControls, Vector3 } from 'three';
 import Flag from './Flag';
 import EventBus from './EventBus';
 import * as dat from 'dat.gui';
 import Fact from './Fact';
 import MouseHandler from './MouseHandler';
-import { ControlsPosition, FlagInformations } from '../typings';
+import { ControlsPosition, FlagInformations, IFact } from '../typings';
+import factsJSON from '../json/facts';
+import flagsJSON from '../json/flags';
 
 class SceneManager {
 
@@ -20,6 +22,7 @@ class SceneManager {
   private stats: Stats;
   private controls: OrbitControls = null;
   private flags: Flag[] = [];
+  private facts: Fact[] = [];
   private params: ControlsPosition;
 
   constructor() {
@@ -53,40 +56,25 @@ class SceneManager {
   }
 
   createFacts() {
-    const fact1 = this.getObject('Fait_1');
-    const button1 = fact1.getObjectByName('Bouton_Plus');
-    fact1.getObjectByName('Infos').visible = false;
-    fact1.getObjectByName('Bouton_Plus').visible = false;
-    console.log(fact1);
-    const fact = new Fact('1 janvier 1970', 'Title', 'Content', '', button1.position, button1.quaternion);
-    fact1.add(fact.getSprite());
-    const fact2 = this.getObject('Fait_2');
-    const button2 = fact2.getObjectByName('Bouton_Plus');
-    fact2.getObjectByName('Infos').visible = false;
-    fact2.getObjectByName('Bouton_Plus').visible = false;
-    console.log(fact2);
-    const factS2 = new Fact('1 janvier 1970', 'Title', 'Content', '', button2.position, button2.quaternion);
-    fact2.add(factS2.getSprite());
+    const facts: IFact[] = factsJSON;
+
+    for (const fact of facts) {
+      const factObject = this.getObject(fact.parent);
+      const buttonObject = factObject.getObjectByName('Bouton_Plus');
+      const infosObject = factObject.getObjectByName('Infos');
+      infosObject.visible = false;
+      buttonObject.visible = false;
+      const f = new Fact(fact.date, fact.title, fact.content, fact.url, buttonObject, infosObject);
+      this.facts.push(f);
+      factObject.add(f.getFactSprite());
+      factObject.add(f.getFactInfosSprite());
+    }
+
+    Fact.onFactClick();
   }
 
   createFlags() {
-    const flags: FlagInformations[] = [
-      {
-        name: 'Drapeau_1',
-        parent: 'drapeau_1',
-        windForce: 2,
-      },
-      {
-        name: 'Drapeau_2',
-        parent: 'drapeau_2',
-        windForce: 1.8,
-      },
-      {
-        name: 'Drapeau_3',
-        parent: 'drapeau_3',
-        windForce: 2.2,
-      },
-    ];
+    const flags: FlagInformations[] = flagsJSON;
 
     for (const flag of flags) {
       const object = this.getObject(flag.name);

@@ -24,9 +24,9 @@ export default class Flag {
   private clothTexture: Texture;
   private uniforms: IUniforms;
   public mesh: Mesh;
-  private position: Vector3;
-  private rotation: Vector3;
-  private scale: Vector3;
+  private readonly position: Vector3;
+  private readonly rotation: Vector3;
+  private readonly scale: Vector3;
   private windForce: number;
 
   public static OFFSETX: number = -71.64;
